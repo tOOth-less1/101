@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* --- INTENSE LIQUID MESH BACKGROUND --- */
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            font-family: 'Lora', serif;
+            padding: 80px 20px; 
+            overflow-x: hidden;
+            position: relative;
+            
+            background-color: #ffc2e6;
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(330,100%,80%,1) 0, transparent 55%), 
+                radial-gradient(at 50% 0%, hsla(280,100%,85%,1) 0, transparent 55%), 
+                radial-gradient(at 100% 0%, hsla(350,100%,75%,1) 0, transparent 55%), 
+                radial-gradient(at 50% 100%, hsla(340,100%,80%,1) 0, transparent 55%), 
+                radial-gradient(at 0% 100%, hsla(260,100%,80%,1) 0, transparent 55%), 
+                radial-gradient(at 100% 100%, hsla(15,100%,85%,1) 0, transparent 55%);
+            background-size: 180% 180%;
+            background-attachment: fixed;
+            animation: liquidBackground 12s ease infinite;
+        }
+
+        @keyframes liquidBackground {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+            100% { background-position: 0% 0%; }
+        }
+
+        /* --- MAIN OUTER CARD --- */
+        .glass-card {
+            width: 100%;
+            max-width: 900px;
+            padding: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 40px 100px rgba(180, 0, 50, 0.1);
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            color: #a00030;
+            font-size: 3rem;
+            margin-bottom: 40px;
+            letter-spacing: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            text-shadow: 0 2px 10px rgba(255, 255, 255, 0.5);
+        }
+
+        /* --- LIQUID GLASS LETTER AREA --- */
+        .wish-container {
+            position: relative;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.05) 100%);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border-radius: 40px;
+            padding: 60px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 
+                inset 0 0 40px rgba(255, 255, 255, 0.4),
+                0 15px 35px rgba(0, 0, 0, 0.05);
+            margin-bottom: 40px;
+            width: 100%;
+            overflow: hidden; 
+        }
+
+        .wish-container::after {
+            content: "";
+            position: absolute;
+            top: -150%;
+            left: -150%;
+            width: 300%;
+            height: 300%;
+            background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 60%);
+            animation: shimmer 15s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes shimmer {
+            0% { transform: rotate(0deg) translate(0, 0); }
+            50% { transform: rotate(180deg) translate(5%, 5%); }
+            100% { transform: rotate(360deg) translate(0, 0); }
+        }
+
+        .wish-text {
+            position: relative;
+            z-index: 1; 
+            color: #1a1a1a;
+            font-size: 1.3rem;
+            line-height: 2.1;
+            text-align: justify;
+            text-align-last: center;
+            font-weight: 500;
+        }
+
+        /* --- READ MORE LINK --- */
+        .read-more {
+            color: #a00030;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: underline;
+            transition: color 0.3s;
+            margin-left: 5px;
+            display: inline-block;
+            position: relative;
+            z-index: 10;
+        }
+        .read-more:hover {
+            color: #ff4d6d;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #a00030 0%, #ff4d6d 100%);
+            color: #ffffff;
+            border: none;
+            padding: 20px 60px;
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            letter-spacing: 4px;
+            border-radius: 100px;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 15px 30px rgba(160, 0, 48, 0.3);
+            align-self: center;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 20px 40px rgba(160, 0, 48, 0.4);
+            letter-spacing: 6px;
+        }
+
+        /* --- VIBRANT HEART PARTICLES --- */
+        .heart-container {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .heart-particle {
+            position: absolute;
+            background-color: rgba(255, 20, 147, 0.3); 
+            transform: rotate(-45deg);
+            animation: floatUp linear infinite;
+            bottom: -60px;
+        }
+
+        .heart-particle::before, .heart-particle::after {
+            content: "";
+            background-color: inherit;
+            border-radius: 50%;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        .heart-particle::before { top: -50%; left: 0; }
+        .heart-particle::after { top: 0; left: 50%; }
+
+        @keyframes floatUp {
+            0% { transform: rotate(-45deg) translateY(0) scale(0.4); opacity: 0; }
+            20% { opacity: 0.9; }
+            80% { opacity: 0.9; }
+            100% { transform: rotate(-45deg) translateY(-120vh) scale(1.5); opacity: 0; }
+        }
+
+        /* --- FROSTED GLASS POPUP --- */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .popup-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .popup-card {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+            border-radius: 30px;
+            padding: 40px;
+            width: 90%;
+            max-width: 420px;
+            text-align: center;
+            position: relative;
+            transform: translateY(30px);
+            transition: transform 0.4s ease;
+        }
+
+        .popup-overlay.show .popup-card {
+            transform: translateY(0);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2rem;
+            color: #a00030;
+            cursor: pointer;
+            line-height: 1;
+            transition: transform 0.3s;
+        }
+
+        .close-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .popup-desc {
+            font-size: 1.1rem;
+            color: #1a1a1a;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+
+        .popup-input {
+            width: 100%;
+            padding: 15px 20px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.5);
+            font-family: 'Lora', serif;
+            font-size: 1.1rem;
+            outline: none;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+            transition: all 0.3s;
+        }
+
+        .popup-input:focus {
+            background: rgba(255, 255, 255, 0.8);
+            border-color: #a00030;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .unlock-btn {
+            background: linear-gradient(135deg, #a00030 0%, #ff4d6d 100%);
+            color: #ffffff;
+            border: none;
+            padding: 12px 35px;
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
+            letter-spacing: 2px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(160, 0, 48, 0.2);
+        }
+
+        .unlock-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 25px rgba(160, 0, 48, 0.3);
+        }
+
+        .error-msg {
+            color: #d90429;
+            font-size: 0.95rem;
+            margin-top: 15px;
+            display: none;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 40px 15px; }
+            .glass-card { padding: 30px 15px; }
+            .wish-container { padding: 35px 20px; }
+            h1 { font-size: 2rem; letter-spacing: 5px; }
+            .wish-text { font-size: 1.15rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="heart-container" id="heart-container"></div>
+
+    <div class="glass-card">
+        <h1>Happy Birthday !</h1>
+        
+        <div class="wish-container">
+            <div class="wish-text">
+                You turned 18 today. Can't believe that much time has passed. I first saw u at primary classes with that cute short hairstyle. After 13 years a lot had changed. You got new friends and slowly we became strangers. Isn't its all wonder that time can change that much in our lives.
+
+<br> <br>I wish your birthday will be filled with happiness joyfull and healthy. I wish Your dreams will be getting closer to you and you will have the strength to achieve your dreams.
+
+<br><br>Time can never come so enjoy every moment. The final year of school life had came already. From now on we have to live with the memories we collected. Just forget your all bad memories. ( I know your most of bad memories are be with me) live your future with good memories. 
+<br> <br>Some times this will be the last days we can be together ( at least we are in a one class ). I think that's a good news for you. I wish for your future from the bottom of my heart. I think things will be changed at least in another life. I'll also wait their for you.
+                <span id="readMoreBtn" class="read-more">Read More...</span>
+            </div>
+        </div>
+        <h3> Do you want to keep this gift close to you. downlod it from here</h3><br>
+        <button class="action-btn" onclick="window.location.href='download.html'">Project 101</button>
+    </div>
+
+    <!-- AUDIO WITH PERSISTENCE -->
+    <audio id="bg-audio" preload="auto">
+        <source src="songs/bg1.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- SECRET POPUP WINDOW -->
+    <div class="popup-overlay" id="secretPopup">
+        <div class="popup-card">
+            <span class="close-btn" id="closeBtn">&times;</span>
+            <p class="popup-desc">The card is the key. </p>
+            <input type="text" id="secretInput" class="popup-input" placeholder="Secret Code..." autocomplete="off"/>
+            <button class="unlock-btn" id="unlockBtn">Unlock</button>
+            <p id="errorMsg" class="error-msg">Incorrect code, please try again.</p>
+        </div>
+    </div>
+    
+    <script>
+        const audio = document.getElementById('bg-audio');
+        audio.volume = 0.15; // quiet background level
+
+        // Restore saved audio playback state from previous pages
+        const savedTime = localStorage.getItem('bgAudioTime');
+        const savedPlaying = localStorage.getItem('bgAudioPlaying');
+        if (savedTime) {
+            audio.currentTime = parseFloat(savedTime);
+        }
+        if (savedPlaying === 'true') {
+            audio.play().catch(e => console.log('Autoplay prevented:', e));
+        }
+
+        // Unmute and play on first user interaction if not already playing
+        const startAudio = () => {
+            if (audio.paused) {
+                audio.play().then(() => {
+                    localStorage.setItem('bgAudioPlaying', 'true');
+                }).catch(e => console.log('Autoplay prevented:', e));
+            }
+            document.removeEventListener('click', startAudio);
+            document.removeEventListener('keydown', startAudio);
+        };
+        
+        document.addEventListener('click', startAudio);
+        document.addEventListener('keydown', startAudio);
+
+        // Continuously save current audio state before leaving/refreshing page
+        window.addEventListener('beforeunload', () => {
+            localStorage.setItem('bgAudioTime', audio.currentTime);
+            localStorage.setItem('bgAudioPlaying', !audio.paused);
+        });
+
+        setInterval(() => {
+            if (!audio.paused) {
+                localStorage.setItem('bgAudioTime', audio.currentTime);
+                localStorage.setItem('bgAudioPlaying', 'true');
+            }
+        }, 500);
+
+        function createHeart() {
+            const container = document.getElementById('heart-container');
+            if (!container) return;
+            const heart = document.createElement('div');
+            heart.classList.add('heart-particle');
+            
+            const sizeNum = Math.random() * 20 + 10;
+            const size = sizeNum + 'px'; 
+            heart.style.width = size;
+            heart.style.height = size;
+            heart.style.left = Math.random() * 100 + 'vw';
+            
+            const duration = Math.random() * 8 + 6 + 's'; 
+            heart.style.animationDuration = duration;
+            
+            const colors = [
+                'rgba(255, 20, 147, ', 
+                'rgba(220, 20, 60, ',  
+                'rgba(255, 105, 180, ', 
+                'rgba(176, 0, 48, '   
+            ];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            heart.style.backgroundColor = `${randomColor}${Math.random() * 0.4 + 0.3})`;
+
+            container.appendChild(heart);
+            setTimeout(() => { heart.remove(); }, parseFloat(duration) * 1000);
+        }
+
+        setInterval(createHeart, 300);
+        
+        for(let i=0; i<20; i++) {
+            createHeart();
+        }
+
+        // --- POPUP LOGIC --- //
+        const readMoreBtn = document.getElementById('readMoreBtn');
+        const secretPopup = document.getElementById('secretPopup');
+        const closeBtn = document.getElementById('closeBtn');
+        const unlockBtn = document.getElementById('unlockBtn');
+        const secretInput = document.getElementById('secretInput');
+        const errorMsg = document.getElementById('errorMsg');
+
+        readMoreBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            secretPopup.classList.add('show');
+            errorMsg.style.display = 'none';
+            secretInput.value = '';
+        });
+
+        closeBtn.addEventListener('click', () => {
+            secretPopup.classList.remove('show');
+        });
+
+        secretPopup.addEventListener('click', (e) => {
+            if (e.target === secretPopup) {
+                secretPopup.classList.remove('show');
+            }
+        });
+
+        unlockBtn.addEventListener('click', () => {
+            const input = secretInput.value.trim().toUpperCase();
+            const CORRECT_CODE = "RIVERSTON"; 
+            
+            if(input === CORRECT_CODE) {
+                window.open('letter 2.html', '_blank'); 
+                secretPopup.classList.remove('show');
+            } else {
+                errorMsg.style.display = 'block';
+            }
+        });
+
+        secretInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                unlockBtn.click();
+            }
+        });
+    </script>
+</body>
+</html>

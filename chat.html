@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+    
+    <!-- 404 Page Dependencies -->
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css'>
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Arvo'>
+    
+    <style>
+        /* =========================================
+           1. ANIMATED GRADIENT BACKGROUND (CHAT) 
+           ========================================= */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* 2. CHAT CONTAINER */
+        #chat-container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        #chat-window {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding-bottom: 150px; 
+            scroll-behavior: smooth;
+        }
+
+        #chat-window::-webkit-scrollbar { display: none; }
+
+        /* 3. MESSAGE BUBBLES */
+        .message {
+            padding: 15px 20px;
+            border-radius: 18px;
+            font-size: 16px;
+            line-height: 1.5;
+            max-width: 60%; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .bot-message-wrapper {
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-start;
+            width: 100%;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .bot-message {
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            border-bottom-left-radius: 2px;
+            margin-left: 10px;
+        }
+
+        .message-gif {
+            max-width: 100%;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .profile-pic {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: #fff;
+            border: 2px solid #fff;
+            object-fit: cover;
+        }
+
+        .user-message-wrapper {
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-end; 
+            width: 100%;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .user-message {
+            background: #128c7e;
+            color: white;
+            border-bottom-right-radius: 2px;
+            margin-right: 10px;
+        }
+
+        /* 4. WAITING ANIMATION */
+        .waiting-dots span {
+            font-size: 24px;
+            animation: blink 1s infinite;
+            opacity: 0;
+        }
+        .waiting-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .waiting-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes blink {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 5. CHOICE BUTTONS */
+        #choice-container {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+            width: auto;
+        }
+
+        .hidden { display: none !important; }
+
+        .choice-btn {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .choice-btn:hover {
+            background: white;
+            color: #e73c7e;
+            transform: translateY(-3px);
+        }
+
+        /* =========================================
+           6. 404 ERROR PAGE STYLES
+           ========================================= */
+        .page_404 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 100vw;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            text-align: center;
+            z-index: 1000;
+            font-family: 'Arvo', serif;
+        }
+
+        .four_zero_four_bg {
+            background-image: url(https://cdn.dribbble.com/users/285475/screenshots/2083086/dribbble_1.gif);
+            height: 400px;
+            width: 100%;
+            max-width: 600px;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
+
+        .four_zero_four_bg h1 {
+            font-size: 80px;
+            margin: 0;
+        }
+
+        .contant_box_404 {
+            margin-top: -20px;
+            width: 90%;
+        }
+
+        .contant_box_404 h3 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .contant_box_404 p {
+            font-size: 1.6rem;
+            color: #666;
+        }
+
+        .single_btn {
+            color: #fff !important;
+            padding: 15px 30px;
+            background: #39ac31;
+            margin: 30px 0;
+            display: inline-block;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            border: none;
+            transition: 0.3s ease;
+            box-shadow: 0 4px 15px rgba(57, 172, 49, 0.3);
+        }
+
+        .single_btn:hover {
+            background: #2d8a26;
+            transform: translateY(-2px);
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            .message { max-width: 85%; }
+            #choice-container { flex-direction: column; bottom: 20px; width: 90%; }
+            .choice-btn { width: 100%; text-align: center; }
+            .four_zero_four_bg { height: 250px; }
+            .four_zero_four_bg h1 { font-size: 50px; }
+            .contant_box_404 h3 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CHAT INTERFACE -->
+    <div id="chat-container">
+        <div id="chat-window"></div>
+        <div id="choice-container" class="hidden">
+            <button id="btn-left" class="choice-btn" onclick="processChoice('left')"></button>
+            <button id="btn-right" class="choice-btn" onclick="processChoice('right')"></button>
+        </div>
+    </div>
+
+    <!-- 404 ERROR OVERLAY -->
+    <section class="page_404" id="error-view">
+        <div class="four_zero_four_bg">
+            <h1 class="text-center">404</h1>
+        </div>
+        <div class="contant_box_404">
+            <h3 class="h2">Okay Bye...</h3>
+            <p>if you think you made a mistake return below</p>
+            <a href="#" class="single_btn" onclick="returnToChat(event)">Return to Chat</a>
+        </div>
+    </section>
+
+    <!-- AUDIO -->
+    <audio id="bg-audio" preload="auto">
+        <source src="songs/bg1.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const audio = document.getElementById('bg-audio');
+        audio.volume = 0.15;
+
+        // Restore saved audio playback state if returning or navigating
+        const savedTime = localStorage.getItem('bgAudioTime');
+        const savedPlaying = localStorage.getItem('bgAudioPlaying');
+        if (savedTime) {
+            audio.currentTime = parseFloat(savedTime);
+        }
+        if (savedPlaying === 'true') {
+            audio.play().catch(e => console.log('Autoplay prevented:', e));
+        }
+
+        // Unmute and play on first user interaction
+        const startAudio = () => {
+            if (audio.paused) {
+                audio.play().then(() => {
+                    localStorage.setItem('bgAudioPlaying', 'true');
+                }).catch(e => console.log('Autoplay prevented:', e));
+            }
+            document.removeEventListener('click', startAudio);
+            document.removeEventListener('keydown', startAudio);
+        };
+        
+        document.addEventListener('click', startAudio);
+        document.addEventListener('keydown', startAudio);
+
+        // Save audio state continuously before leaving page
+        window.addEventListener('beforeunload', () => {
+            localStorage.setItem('bgAudioTime', audio.currentTime);
+            localStorage.setItem('bgAudioPlaying', !audio.paused);
+        });
+
+        setInterval(() => {
+            if (!audio.paused) {
+                localStorage.setItem('bgAudioTime', audio.currentTime);
+                localStorage.setItem('bgAudioPlaying', 'true');
+            }
+        }, 500);
+
+        const chatWindow = document.getElementById('chat-window');
+        const choiceContainer = document.getElementById('choice-container');
+        const btnLeft = document.getElementById('btn-left');
+        const btnRight = document.getElementById('btn-right');
+
+        let currentStep = 0;
+
+        const conversationTree = [
+            {
+                botText: "Hey, is there dewndara 👀?",
+                gif: "images/g1.gif", 
+                left: { text: "yes, it's me 😊", gif: "images/g2.gif", next: 1 }, 
+                right: { text: "no, it's not me 🙄", gif: "images/user-g2.gif", url: "404.html" } 
+            },
+            {
+                botText: "Sooooo, After a looong time. Shall we talk a bit 🙃?",
+                gif: "",
+                left: { text: "Yeah, sure 😄", next: 2 },
+                right: { text: "Not now, I'm busy 😒", url:"404.html"}
+            },
+            {
+                botText: "How's your life going These days 🙃?",
+                gif: "images/g3.gif",
+                left: { text: "it's awesome. how's yours ?🥳", gif: "images/g4.gif", next: 3 },
+                right: { text: "It's not good as i thought 😔",gif: "images/g5.gif", next: 4}
+            },
+            {
+                botText: "It's not what i expected but it's ok. I think today is a special day fory you. Isn't it 😉? ",
+                left: { text: "Mmm... yes. How would you know about it ?🤨", next: 5 },
+                right: { text: "No, ther's nothin special about today", url: "404.html" }
+            },
+            {
+                botText: "not all the time that things do what we espected 😞",
+                left: { text: "Mmmm... that's true. How about your's ? 🙁", next: 3 },
+                right: { text: "Anyway, You know nothing about me 😒", url: "404.html" }
+            },
+            {
+                botText: "He he, i know. Today is the day you turning 18, am i right ?😁 ",
+                left: { text: "Yeah, How would you know about it ?🙄", next: 6 },
+                right: { text: "Nah, you'r wrong 🥱", url: "404.html" }
+            },
+            {
+                botText: "Shh... Its a sectret. How you feel about your 18 ?😄",
+                gif: "images/g7.gif", 
+                left: { text: "It's feel more happy. i think this is going to be the best chapter of my life 🥳",gif: "images/g8.gif", next: 7 },
+                right: { text: "Not much. It also like another birthday to me 🙄", next: 7 }
+            },
+            {
+                botText: "By the way, Do you have any idea about who i am ?😉",gif: "images/g9.gif",
+                left: { text: "yes, i know 🤭", next: 8 },
+                right: { text: "No. actually who are you ?🤨", next:10 }
+            },
+            {
+                botText: "Haha you got me. but sometimes it's not who you think.I tought to suprise you 😅",
+                left: { text: "yay yay yay, you can't fool me, so what is your suprise 😏", gif: "images/g11.gif",next: 9 },
+                right: { text: "Anyway, I'm busy now 😑", url: "404.html" }
+            },
+            {
+                botText: "Mmmmmm, There is something I have to show you 🙄",
+                left: { text: "Yeah sure, I would love to see it 😊",gif: "images/g10.gif", url:"image 1.html" },
+                right: { text: "I have some important ", url:"404.html"  }
+            },
+            {
+                botText: "Shhhhh, It's a secret. There is something I have to show you 🙄",
+                left: { text: "Yeah sure, I would love to see it 😊",gif: "images/g10.gif", url:"image 1.html" },
+                right: { text: "I already Hate it 😒", url: "404.html" }
+            }
+        ];
+
+        function showWaiting() {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'bot-message-wrapper';
+            wrapper.id = 'typing-indicator';
+            wrapper.innerHTML = `
+                <img src="images/2.jpg" class="profile-pic" alt="Bot">
+                <div class="message bot-message waiting-dots">
+                    <span>•</span><span>•</span><span>•</span>
+                </div>
+            `;
+            chatWindow.appendChild(wrapper);
+            scrollToBottom();
+        }
+
+        function removeWaiting() {
+            const indicator = document.getElementById('typing-indicator');
+            if (indicator) indicator.remove();
+        }
+
+        function addMessage(text, type, gif = null) {
+            const wrapper = document.createElement('div');
+            
+            let messageContent = '';
+            if (gif) {
+                messageContent += `<img src="${gif}" class="message-gif" alt="GIF">`;
+            }
+            if (text) {
+                messageContent += `<span>${text}</span>`;
+            }
+
+            if (type === 'bot') {
+                wrapper.className = 'bot-message-wrapper';
+                wrapper.innerHTML = `
+                    <img src="images/2.jpg" class="profile-pic" alt="Bot">
+                    <div class="message bot-message">${messageContent}</div>
+                `;
+            } else {
+                wrapper.className = 'user-message-wrapper';
+                wrapper.innerHTML = `
+                    <div class="message user-message">${messageContent}</div>
+                    <img src="images/1.png" class="profile-pic" alt="User">
+                `;
+            }
+            chatWindow.appendChild(wrapper);
+            scrollToBottom();
+        }
+
+        function scrollToBottom() {
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        function updateButtons() {
+            const stepData = conversationTree[currentStep];
+            btnLeft.innerText = stepData.left.text;
+            btnRight.innerText = stepData.right.text;
+            choiceContainer.classList.remove('hidden');
+        }
+
+        function returnToChat(e) {
+            e.preventDefault();
+            document.getElementById('error-view').style.display = 'none';
+            updateButtons();
+            scrollToBottom();
+        }
+
+        function processChoice(side) {
+            choiceContainer.classList.add('hidden');
+            const choice = conversationTree[currentStep][side];
+            
+            addMessage(choice.text, 'user', choice.gif);
+
+            if (side === 'right' && choice.url) {
+                setTimeout(() => {
+                    if (choice.url.includes("404")) {
+                        document.getElementById('error-view').style.display = 'flex';
+                    } else {
+                        window.location.href = choice.url; 
+                    }
+                }, 800);
+                return;
+            }
+
+            if (currentStep === 10 && side === 'left') {
+                setTimeout(() => {
+                    window.location.href = "image 1.html";
+                }, 1500);
+                return;
+            }
+            if (currentStep === 9 && side === 'left') {
+                setTimeout(() => {
+                    window.location.href = "image 1.html";
+                }, 1500);
+                return;
+            }
+
+            setTimeout(() => {
+                showWaiting();
+                setTimeout(() => {
+                    removeWaiting();
+                    currentStep = choice.next;
+                    const stepData = conversationTree[currentStep];
+                    addMessage(stepData.botText, 'bot', stepData.gif);
+                    
+                    setTimeout(() => {
+                        updateButtons();
+                    }, 500);
+                }, 1200);
+            }, 600);
+        }
+
+        window.onload = () => {
+            showWaiting();
+            setTimeout(() => {
+                removeWaiting();
+                const stepData = conversationTree[0];
+                addMessage(stepData.botText, "bot", stepData.gif);
+                setTimeout(updateButtons, 500);
+            }, 1000);
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Launch Countdown</title>
+    <style>
+        /* [YOUR EXACT EXISTING STYLES REMAIN UNCHANGED HERE] */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+        body { background: #0a0a0a; overflow-x: hidden; }
+        #initial-fade-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 20000; pointer-events: none; transition: opacity 1.5s ease-out; }
+        .hidden-curtain { opacity: 0; }
+        #countdown-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #0a0a0a; color: #fff; display: flex; justify-content: center; align-items: center; z-index: 10000; transition: opacity 1s ease; padding: 0 20px; }
+        .container { max-width: 600px; width: 100%; text-align: center; }
+        h1 { font-size: clamp(1.8rem, 6vw, 3rem); margin-bottom: 10px; letter-spacing: -1px; }
+        p { color: #888; margin-bottom: 30px; font-size: 1rem; line-height: 1.5; }
+        #timer { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; width: 100%; }
+        .box { background: #151515; padding: 20px 10px; border-radius: 12px; border: 1px solid #252525; transition: transform 0.3s ease; }
+        .box:hover { transform: translateY(-5px); border-color: #ff3e3e; }
+        .num { font-size: clamp(1.5rem, 5vw, 2.5rem); font-weight: 800; color: #ff3e3e; display: block; line-height: 1; }
+        .label { font-size: 0.7rem; color: #666; text-transform: uppercase; letter-spacing: 2px; margin-top: 8px; display: block; }
+        .music-btn { background: #151515; color: #888; border: 1px solid #252525; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 30px; transition: all 0.3s ease; outline: none; }
+        .music-btn:hover { border-color: #ff3e3e; color: #ff3e3e; }
+        .fade-out-page { opacity: 0 !important; pointer-events: none; }
+        #heart-container { position: fixed; bottom: -50px; left: 0; width: 100%; height: 0; pointer-events: none; z-index: 9999; }
+        .heart { position: absolute; color: #ff4d4d; user-select: none; animation: floatUp linear forwards, sway ease-in-out infinite; }
+        @keyframes floatUp { 0% { transform: translateY(0); opacity: 0; } 10% { opacity: 0.8; } 90% { opacity: 0.8; } 100% { transform: translateY(-110vh); opacity: 0; } }
+        @keyframes sway { 0%, 100% { margin-left: 0px; } 50% { margin-left: 30px; } }
+        @media (max-width: 480px) { #timer { gap: 8px; } .box { padding: 15px 5px; } }
+    </style>
+</head>
+<body>
+
+    <div id="initial-fade-overlay"></div>
+
+    <div id="countdown-overlay">
+        <div id="heart-container"></div>
+        <div class="container">
+            <h1>Coming Soon</h1>
+            <p>I'm launching something special for you on October 13th, 2026 at 00:00 AM.<br>Prepare for the secret reveal.</p>
+            
+            <div id="timer">
+                <div class="box"><span class="num" id="days">00</span><span class="label">Days</span></div>
+                <div class="box"><span class="num" id="hours">00</span><span class="label">Hours</span></div>
+                <div class="box"><span class="num" id="mins">00</span><span class="label">Mins</span></div>
+                <div class="box"><span class="num" id="secs">00</span><span class="label">Secs</span></div>
+            </div>
+            <button id="music-btn" class="music-btn" type="button" onclick="location.href='player.html'" >Feel Bored 🎵 </button>
+        </div>
+    </div>
+
+    <audio id="bg-audio" loop>
+        <source src="images/loginbg.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // --- A. ENTRANCE LOGIC ---
+        window.addEventListener('DOMContentLoaded', () => {
+            const curtain = document.getElementById('initial-fade-overlay');
+            setTimeout(() => curtain.classList.add('hidden-curtain'), 100);
+            setTimeout(() => curtain.style.display = 'none', 1600); 
+            
+            // --- NEW: AUDIO CONTINUITY LOGIC ---
+            const audio = document.getElementById('bg-audio');
+            audio.volume = 0.05; // Make sure this matches the login page volume
+
+            const savedTime = sessionStorage.getItem('bgAudioTime');
+            const isPlaying = sessionStorage.getItem('bgAudioPlaying');
+
+            // If the audio was playing on the previous page, resume it here
+            if (isPlaying === 'true' && savedTime) {
+                audio.currentTime = parseFloat(savedTime);
+                
+                const playPromise = audio.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(() => {
+                        // If the browser gets strict and blocks autoplay on the new page, fallback to waiting for a click
+                        document.body.addEventListener('click', () => { audio.play(); }, { once: true });
+                    });
+                }
+            }
+        });
+
+        // --- C. COUNTDOWN LOGIC ---
+        const targetDate = new Date("2026-10-13T00:00:00+05:30").getTime();
+
+        const timerInterval = setInterval(() => {
+            const now = new Date().getTime();
+            const diff = targetDate - now;
+
+            if (diff <= 0) {
+                clearInterval(timerInterval);
+                document.getElementById("countdown-overlay").classList.add("fade-out-page");
+                setTimeout(() => { window.location.href = "chat.html"; }, 1000);
+                return;
+            }
+
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = d.toString().padStart(2, '0');
+            document.getElementById("hours").innerText = h.toString().padStart(2, '0');
+            document.getElementById("mins").innerText = m.toString().padStart(2, '0');
+            document.getElementById("secs").innerText = s.toString().padStart(2, '0');
+        }, 1000);
+
+        // --- D. HEART ANIMATION ---
+        function createHeart() {
+            const container = document.getElementById('heart-container');
+            if (!container) return;
+            const heart = document.createElement('span');
+            heart.classList.add('heart');
+            heart.innerText = '❤';
+            heart.style.left = Math.random() * 100 + "vw";
+            const size = Math.random() * 30 + 10;
+            heart.style.fontSize = size + "px";
+            const colors = ['#ff4d4d', '#ff7675', '#ef5777', '#574b90', '#f78fb3'];
+            heart.style.color = colors[Math.floor(Math.random() * colors.length)];
+            heart.style.opacity = Math.random() * 0.5 + 0.5;
+            const duration = Math.random() * 5 + 4;
+            heart.style.animationDuration = duration + "s";
+            container.appendChild(heart);
+            setTimeout(() => heart.remove(), (duration + 2) * 1000);
+        }
+        setInterval(createHeart, 400);
+    </script>
+</body>
+</html>

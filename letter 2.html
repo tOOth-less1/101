@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Letter</title>
+    <style>
+        :root {
+            --primary-red: #ff3366;
+            --deep-purple: #3d0c40;
+            --glass-card-bg: rgba(255, 255, 255, 0.88);
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --text-color: #2b2b2b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Georgia', serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--deep-purple), #1a0026, var(--primary-red));
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .letter-container {
+            width: 100%;
+            max-width: 600px;
+            background: var(--glass-card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3), inset 0 0 15px rgba(255, 255, 255, 0.6);
+            color: var(--text-color);
+            position: relative;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .letter-header {
+            border-bottom: 2px solid rgba(255, 51, 102, 0.2);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .letter-header h1 {
+            font-size: 1.5rem;
+            color: var(--deep-purple);
+            font-weight: normal;
+        }
+
+        .date {
+            font-size: 0.9rem;
+            color: #666;
+            font-style: italic;
+        }
+
+        .letter-body {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .letter-body p {
+            margin-bottom: 15px;
+        }
+
+        .letter-footer {
+            text-align: right;
+            font-style: italic;
+            color: var(--primary-red);
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
+
+        .button-container {
+            text-align: center;
+            border-top: 1px solid rgba(255, 51, 102, 0.2);
+            padding-top: 25px;
+        }
+
+        .action-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary-red), var(--deep-purple));
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-family: 'Georgia', serif;
+            font-size: 1rem;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(255, 51, 102, 0.4);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 51, 102, 0.6);
+            background: linear-gradient(135deg, #ff1a53, #2d0630);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            .letter-container {
+                padding: 24px;
+            }
+            .letter-header h1 {
+                font-size: 1.25rem;
+            }
+            .letter-body {
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="letter-container">
+        <div class="letter-header">
+            <h1>දෙව් වෙත,</h1>
+            <span class="date">October 10, 2026</span>
+        </div>
+        <div class="letter-body">
+            <p>
+                මම කොතනින් පටන්ගන්නද කියලා හිතාගන්න අමරුයි. ඔයාට කොහොමද ඉතින්, හොදින් සතුටින් ඉන්නව නේද ? මම හිතනව වැඩ ටික එහෙමත් හොදට කරගන්නව ඇති කියල. 
+ඔයාව හැම වෙලාවම වගේ මතක් වෙනවා. මෙච්චර කාලයක් එකට ඉදලා අවසානෙට දන්නෙම නතුව අපි ආගන්තුකයෝ වෙලා නෙද ? 
+ඇත්තටම බලුවොත් මම මාරම මෝඩයෙක්. අපි කමති දේවල් හිතන විදිහටම සිද්ද වෙයි කියල හිතන් ඉන්න මෝඩයෙක්. ඔයා OL කාලෙදි w.music room එක ලගදි මට දෙන්නම් කියපු 
+bracelet එක දෙනකන් AL වල අවසාන අවුරුද්ද වෙනකනුත් පොඩි හරි බලාපොරොත්තුවක් තියන් බලන් ඉන්න මෝඩයෙක්. මම එදා වෙන කෙල්ලෙක් එක්ක වැඩකට ගියට පස්සෙ ඔයා මට 
+බැන්නේ මම ගැන හිතන නිසා කියල හිතන් ඉන්න මෝඩයෙක්. එදා ගියපු ට්‍රිප් එක ගැන, එදා හිටපු ඔයා ගැන හිත හිත ඉන්න මෝඩයෙක්. ඔයාගෙ ජීවිතේ ඕනෙම තැනකදි 2nd option එක 
+කියල දැන දැනත් කවදම හරි දවස්සක ඔයාගෙ 1st option එක මම වෙයි කියල හිතන් ඉන්න මෝඩයෙක්. ඔයා මාත් එක්ක කතා කරපු පොඩි පොඩි දෙවල් ගැනත් හිතේ ලොකු 
+දේවල් හදාගෙන හිත හිත ඉන්න මෝඩයෙක්. ජේවිතෙට සිද්ද වෙන්නෙ නති දෙවල් ගැන හදා ගත්ත imaginary ලෝකෙක ජීවත් වෙන මෝඩයෙක්. 
+<br><br>
+ඉතින් දෙව්, මට දැන් පොඩ්ඩක් මහන්සි, ඔයාව මතක් වෙන හැම වෙලාවකම වගේ අඩන මගෙ හදවතට මහාන්සී, හමදාම වගේ රෑට මහ හයියෙන් අඩන මගෙ ඇස් දෙකට මහන්සී. මට පොඩ්ඩකට නවතින්න ඕනෙ දෙව්, 
+ඔයාව යාලුවෙක් විදිහට හිතන්න පුරුදු වෙන මගේ විතට මහන්සී. 
+<br><br>
+මගෙත් වැරදි ඇති, එත් මට එවා හදාගන්න පුලුවන්. හැම මනුස්සයෙක්ම perfect නෑනෙ නේ ? ඔයාගෙ අතිනුත් වැරදි වෙනවනෙ නේද ?. සමහරවිට ඔයගෙ 1st love එකේ experience එකත් එක්ක 
+ඔයා මෙහෙම වෙනස් උනාද කියලත් මට හිතෙනවා. ඒකට ඉතින් දැන් කරන්න දෙයක් නෑ කියලා මම දන්නවා.
+<br><br>
+අපි අඩුම තරමින් එකම පන්තියක ඉන්න අවසාන කාලේ මෙහෙම ඉන්න වෙන එක ගැන මැරනකන්ම මම මටම සමාවක් දෙන්නෙ නති වෙයි. මම ඔයත් එක්ක කතාකරන එකට ඔයා කැමති නෑ නේද ?
+2026//08/30 මම ඔයාගෙන් ඔයා කරන්න කමති දේවල් ගැන අහුවෙ එහෙම උනොත් අපි දෙන්නටම ඒ දේවල් එකට කරන්න පුලුවන් වෙයි කියල හිතලා. නැත්තම් මොකුත් case එකක් නිස නෙමෙයි දෙව්,
+මේ ගෙවෙන අවසාන කාලේ සතුටින් ඉන්න ඕන නිසයි. ඔයාටනම් ඉතින් මම ඉන්න තැන මොන සතුටක්ද නේද,
+<br><br>
+මට හිතාගන්න බෑ දෙව් ඇයි මට ඔයාව මෙච්චර අමතක කරන්න අමාරු කියලා. ඔයාගෙ අස් දෙක,ඔයාගේ හිනාව, ඔයාගේ කතාව, ඔයාගෙ තිබ්බ ඒ හුරතල් කම, මට හිතාගන්න බෑ ඔයාව අමතක කරන්නෙ කොහොමද කියලා.
+කොහොමත් දෙව් අපිට බෑනෙ නේද ආදරේ කියන දේ බලෙන් ගන්න. මට හිතාගන්න අමාරු මෙච්චර ඈතින් ඔයාට අදරේ කරපු මට ඇයි ඔයාව අමතක කරගන්න බරි කියලා. සමහරවිට ඔයා කියන දේත් අත්තක් අති නේද, 
+ඔයා කියනව වගෙ ආදරේ කියල දෙයක් අත්තටම මෙ ලෝකෙ නැත්තම්, මේ හැම දෙයක්ම බොරුවක්නම්, ඒත් එහෙමනම් මම ඔයාට ආදරේ නැද්ද, එහෙනම් මේ දේ මොකක්ද, ඇයි මට ඔයාව අමතක කරන්න බැරි. 
+මගේ ජීවිතේ අවසාන මොහොත වෙනකන් මම මේ මගේ නොවන ආදරේට, ආදරේ කරයි. තව කියන්න දේවල් තිබුනත් මම මෙතනින් නවතින්නම්.
+            </p>
+            
+        </div>
+        <div class="letter-footer">
+            මීට,<br>නමක් නොමැති මෝඩයෙක්.
+        </div>
+        
+        <!-- Button added to bottom -->
+        <div class="button-container">
+            <a href="letter.html" target="_blank" class="action-btn">Preveous page</a>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animated 404</title>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css'>
+  <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Arvo'>
+  
+  <style>
+    /* Reset and Lock Screen */
+    html, body {
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden; /* Strictly no scrolling */
+      font-family: 'Arvo', serif;
+    }
+
+    /* Full Screen Wrapper */
+    .page_404 {
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      text-align: center;
+    }
+
+    /* Animation Area */
+    .four_zero_four_bg {
+      background-image: url(https://cdn.dribbble.com/users/285475/screenshots/2083086/dribbble_1.gif);
+      height: 400px;
+      width: 100%;
+      max-width: 600px;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain;
+    }
+
+    .four_zero_four_bg h1 {
+      font-size: 80px;
+      margin: 0;
+    }
+
+    /* Content Area */
+    .contant_box_404 {
+      margin-top: -20px;
+      width: 90%;
+    }
+
+    .contant_box_404 h3 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    .contant_box_404 p {
+      font-size: 1.6rem;
+      color: #666;
+    }
+
+    /* The Only Button */
+    .single_btn {
+      color: #fff !important;
+      padding: 15px 30px;
+      background: #39ac31;
+      margin: 30px 0;
+      display: inline-block;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+      border: none;
+      transition: 0.3s ease;
+      box-shadow: 0 4px 15px rgba(57, 172, 49, 0.3);
+    }
+
+    .single_btn:hover {
+      background: #2d8a26;
+      transform: translateY(-2px);
+      text-decoration: none;
+    }
+
+    /* Responsive scaling for mobile */
+    @media (max-width: 767px) {
+      .four_zero_four_bg {
+        height: 250px;
+      }
+      .four_zero_four_bg h1 {
+        font-size: 50px;
+      }
+      .contant_box_404 h3 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<section class="page_404">
+  <!-- Top: Animation -->
+  <div class="four_zero_four_bg">
+    <h1 class="text-center">404</h1>
+  </div>
+
+  <!-- Bottom: Content and Single Button -->
+  <div class="contant_box_404">
+    <h3 class="h2">Okay Bye...</h3>
+    <p>if you think you made a msitake return below</p>
+    
+    <a href="chat.html" class="single_btn">Return to Chat</a>
+  </div>
+</section>
+
+</body>
+</html>

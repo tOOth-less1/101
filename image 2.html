@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>image 2</title>
+  <style>
+    :root {
+      --bg-dark: #08080a;
+      --text-main: #ffffff;
+      --text-sub: rgba(255, 255, 255, 0.65);
+      --glass-btn: rgba(255, 255, 255, 0.12);
+      --glass-border: rgba(255, 255, 255, 0.2);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      background-color: var(--bg-dark);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+    }
+
+    .ambient-glow {
+      position: absolute;
+      inset: -10%;
+      background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1080&q=80');
+      background-size: cover;
+      background-position: center;
+      filter: blur(80px) brightness(0.25) saturate(1.4);
+      transform: scale(1.1);
+      z-index: 0;
+    }
+
+    .stage {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+    }
+
+    .media-card {
+      position: relative;
+      height: calc(100dvh - 2.5rem);
+      aspect-ratio: 9 / 16;
+      max-width: 100%;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 
+        0 30px 60px -15px rgba(0, 0, 0, 0.9),
+        0 0 0 1px rgba(255, 255, 255, 0.15);
+      background: #111;
+    }
+
+    .media-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .overlay-controls {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 2rem 1.25rem 1.25rem;
+      background: linear-gradient(
+        to top, 
+        rgba(0, 0, 0, 0.88) 0%, 
+        rgba(0, 0, 0, 0.4) 65%, 
+        transparent 100%
+      );
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .meta-data {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .badge {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .file-name {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
+    }
+
+    .download-pill {
+      width: 100%;
+      padding: 0.85rem 1.25rem;
+      border: 1px solid var(--glass-border);
+      border-radius: 99px;
+      background: rgba(255, 255, 255, 0.95);
+      color: #000;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .download-pill:hover {
+      background: #ffffff;
+      transform: scale(1.02);
+      box-shadow: 0 8px 25px rgba(255, 255, 255, 0.25);
+    }
+
+    .download-pill:active {
+      transform: scale(0.98);
+    }
+
+    .icon-wrapper {
+      width: 28px;
+      height: 28px;
+      background: #000;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+
+    .icon-wrapper svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      stroke-width: 2.5;
+      fill: none;
+    }
+
+    .next-pill {
+      width: 100%;
+      padding: 0.85rem 1.25rem;
+      border: 1px solid var(--glass-border);
+      border-radius: 99px;
+      background: var(--glass-btn);
+      color: var(--text-main);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .next-pill:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.02);
+    }
+
+    .next-pill:active {
+      transform: scale(0.98);
+    }
+
+    .next-icon-wrapper {
+      width: 28px;
+      height: 28px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-main);
+    }
+
+    .next-icon-wrapper svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      stroke-width: 2.5;
+      fill: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="ambient-glow"></div>
+
+  <main class="stage">
+    <div class="media-card">
+      <img id="previewImage" src="images/photo2.png" alt="Preview 2">
+      
+      <div class="overlay-controls">
+        <div class="meta-data">
+          <span class="badge">Portrait • 9:16</span>
+          <h1 class="file-name">Editorial Artwork</h1>
+        </div>
+
+        <button class="download-pill" id="downloadBtn">
+          <span id="btnText">Download Asset</span>
+          <div class="icon-wrapper">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 5v14M19 12l-7 7-7-7"/>
+            </svg>
+          </div>
+        </button>
+
+        <!-- NEXT IMAGE BUTTON -->
+        <button class="next-pill" onclick="window.location.href='image 3.html'">
+          <span>Next Image</span>
+          <div class="next-icon-wrapper">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </div>
+        </button>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- AUDIO PERSISTENCE -->
+  <audio id="bg-audio" preload="auto">
+      <source src="songs/bg1.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    const FILE_URL = 'images/photo2.png';
+    const FILE_NAME = 'photo2.png';
+
+    // Continuous music sync
+    const audio = document.getElementById('bg-audio');
+    audio.volume = 0.15;
+    const savedTime = localStorage.getItem('bgAudioTime');
+    const savedPlaying = localStorage.getItem('bgAudioPlaying');
+    if (savedTime) audio.currentTime = parseFloat(savedTime);
+    if (savedPlaying === 'true') {
+        audio.play().catch(e => console.log('Autoplay prevented:', e));
+    }
+
+    window.addEventListener('beforeunload', () => {
+        localStorage.setItem('bgAudioTime', audio.currentTime);
+        localStorage.setItem('bgAudioPlaying', !audio.paused);
+    });
+
+    setInterval(() => {
+        if (!audio.paused) {
+            localStorage.setItem('bgAudioTime', audio.currentTime);
+            localStorage.setItem('bgAudioPlaying', 'true');
+        }
+    }, 500);
+
+    // Download handler with "Save As" location picker prompt
+    document.getElementById('downloadBtn').addEventListener('click', async () => {
+      const btnText = document.getElementById('btnText');
+      const originalText = btnText.innerText;
+
+      try {
+        btnText.innerText = 'Saving...';
+        
+        const response = await fetch(FILE_URL);
+        const blob = await response.blob();
+        
+        if ('showSaveFilePicker' in window) {
+          const handle = await window.showSaveFilePicker({
+            suggestedName: FILE_NAME,
+            types: [{
+              description: 'Image Files',
+              accept: { 'image/png': ['.png'] }
+            }]
+          });
+          const writable = await handle.createWritable();
+          await writable.write(blob);
+          await writable.close();
+        } else {
+          const blobUrl = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = blobUrl;
+          a.download = FILE_NAME;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(blobUrl);
+        }
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          const a = document.createElement('a');
+          a.href = FILE_URL;
+          a.download = FILE_NAME;
+          a.target = '_blank';
+          a.click();
+        }
+      } finally {
+        btnText.innerText = originalText;
+      }
+    });
+  </script>
+</body>
+</html>

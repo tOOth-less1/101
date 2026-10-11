@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SECURE TERMINAL</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+        :root {
+            --bg-color: #05070a;
+            --panel-bg: rgba(5, 7, 10, 0.9);
+            --neon-cyan: #00f3ff;
+            --neon-blue: #0066ff;
+            --text-muted: #62758d;
+            --text-light: #d1f4ff;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color);
+            color: var(--text-light);
+            font-family: 'Share Tech Mono', monospace;
+            overflow: hidden;
+        }
+
+        /* Ambient CRT Scanline overlay */
+        body::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.3) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            z-index: 5;
+            background-size: 100% 3px, 6px 100%;
+            pointer-events: none;
+        }
+
+        #networkCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        #ui-layer {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            pointer-events: none;
+        }
+
+        /* Initial Boot Button Container */
+        #boot-container {
+            pointer-events: auto;
+            transition: opacity 0.6s ease;
+            text-align: center;
+        }
+
+        /* Clue UI Box - Starts hidden */
+        .clue-wrapper {
+            background: var(--panel-bg);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            box-shadow: 0 0 30px rgba(0, 102, 255, 0.15), inset 0 0 15px rgba(0, 243, 255, 0.05);
+            padding: 30px;
+            max-width: 500px;
+            width: 85%;
+            text-align: center;
+            opacity: 0;
+            transform: scale(0.95) translateY(10px);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .clue-wrapper.visible {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            pointer-events: auto;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+            letter-spacing: 3px;
+            border-bottom: 1px solid rgba(0, 102, 255, 0.4);
+            padding-bottom: 12px;
+            font-size: 1.4rem;
+        }
+
+        /* Stylized Dynamic Media Container */
+        .clue-media-container {
+            width: 100%;
+            max-height: 220px;
+            min-height: 100px;
+            overflow: hidden;
+            margin: 15px 0;
+            border: 1px solid rgba(0, 243, 255, 0.5);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+            position: relative;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Media Tags dynamically injected into the container */
+        .clue-media-container img, .clue-media-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            opacity: 0.85;
+            filter: hue-rotate(15deg) contrast(1.1);
+            transition: opacity 0.5s ease;
+        }
+
+        .clue-media-container audio {
+            width: 90%;
+            margin: 20px 0;
+            filter: invert(1) hue-rotate(180deg);
+        }
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.5;
+            margin: 20px 0;
+            color: var(--text-light);
+            min-height: 50px;
+        }
+
+        /* Cyberpunk Button Styling */
+        .cyber-btn {
+            background: transparent;
+            color: var(--neon-cyan);
+            border: 1px solid var(--neon-cyan);
+            padding: 12px 28px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+            pointer-events: auto;
+            margin-bottom: 10px;
+        }
+
+        .cyber-btn:hover {
+            background: rgba(0, 243, 255, 0.1);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.6);
+            text-shadow: 0 0 5px #fff;
+        }
+
+        .cyber-btn:active {
+            transform: scale(0.98);
+        }
+
+        .cyber-btn:disabled {
+            border-color: var(--text-muted);
+            color: var(--text-muted);
+            cursor: not-allowed;
+            box-shadow: none;
+            background: transparent;
+        }
+
+        /* Secondary Auxiliary Buttons Container */
+        .aux-btn-container {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            justify-content: space-between;
+        }
+
+        /* Secondary Button Variants */
+        .secondary-btn {
+            flex: 1;
+            font-size: 0.8rem;
+            padding: 8px 10px;
+            box-shadow: none;
+            margin-bottom: 0;
+        }
+
+        .support-btn {
+            border-color: var(--neon-blue);
+            color: var(--neon-blue);
+        }
+        .support-btn:hover {
+            background: rgba(0, 102, 255, 0.1);
+            box-shadow: 0 0 15px rgba(0, 102, 255, 0.4);
+        }
+
+        .login-btn {
+            border-color: #b946ff;
+            color: #b946ff;
+        }
+        .login-btn:hover {
+            background: rgba(185, 70, 255, 0.1);
+            box-shadow: 0 0 15px rgba(185, 70, 255, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="networkCanvas"></canvas>
+
+    <div id="ui-layer">
+        <div id="boot-container">
+            <button class="cyber-btn" onclick="initializeSystem(this)">[ START HUNT FOR CLUES ]</button>
+        </div>
+
+        <div id="clue-box" class="clue-wrapper">
+            <h2 id="clue-header">NODE.SECURE //</h2>
+            
+            <!-- Dynamic Media Container -->
+            <div class="clue-media-container" id="media-container"></div>
+
+            <p id="clue-text"></p>
+
+            <button id="next-btn" class="cyber-btn" onclick="triggerJump()">DECRYPT NEXT NODE</button>
+            
+            <!-- Secondary Navigation Buttons -->
+            <div class="aux-btn-container">
+                <button class="cyber-btn secondary-btn support-btn" onclick="openSupportPage()">[ CONTACT SUPPORT ]</button>
+                <button class="cyber-btn secondary-btn login-btn" onclick="openLoginPage()">[ LOGIN PAGE ]</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- CONFIGURATION TARGETS ---
+        // Swap these paths out with your external live webpage URLs!
+        const SUPPORT_URL = "https://your-support-page.com";
+        const LOGIN_URL = "https://your-login-page.com";
+
+        // --- 1. PUZZLE DATA (TEXT + MULTIMEDIA) ---
+        const clues = [
+            {
+                text: "Invented in 1830s as a communication method by Samuel F. B. Morse and Alfred Vail",
+                mediaType: "image",
+                mediaSrc: "images/1st.png"
+            },
+            {
+                text: "username hidden under these donts and lines   ... .- - .... ... .- .-. .- -. .. ..--.- -- .- -. .. -.- .-",
+                mediaType: "audio",
+                mediaSrc: "images/mose.mp3"
+            },
+            {
+                text: "Base64 is a universal encoding method that safely translates binary data into readable text without providing security.",
+                mediaType: "image",
+                mediaSrc: "images/base.png"
+            },
+            {
+                text: "this code may be useful in future.  ZGV3QDEzLjEwLjA4 ",
+                mediaType: "image",
+                mediaSrc: "images/pass.png"
+            },
+            {
+                text: "windows powershell will help you in this case. [System.Text.Encoding]::UTF8.GetString([Convert]::FromBase64String(*put the code you found before inside double quoitation marks in here*)) ",
+                mediaType: "image",
+                mediaSrc: "images/powershell.png"
+            },
+            {
+                text: "Decription successfull",
+                mediaType: "image",
+                mediaSrc: "images/success.jpg"
+            }
+        ];
+        
+        let currentClueIndex = 0;
+
+        // Button Action Integrations
+        function openSupportPage() {
+            // Opens Gmail compose window in a new tab
+            window.open("contact.html", '_blank', 'noopener,noreferrer');
+        }
+
+        function openLoginPage() {
+            // Opens index.html in the SAME tab
+            window.location.href = "index.html";
+        }
+
+        // --- 2. CANVAS & MOUSE NETWORKING SETUP ---
+        const canvas = document.getElementById('networkCanvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+        const numParticles = 85;
+        const maxConnectDist = 160;
+        
+        const mouse = { x: null, y: null, radius: 180 };
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+        window.addEventListener('mouseout', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.4;
+                this.vy = (Math.random() - 0.5) * 0.4;
+                this.radius = Math.random() * 2 + 1.5;
+                this.baseRadius = this.radius;
+            }
+            update() {
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+                
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (mouse.x != null && mouse.y != null) {
+                    let dx = this.x - mouse.x;
+                    let dy = this.y - mouse.y;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < mouse.radius) {
+                        this.radius = this.baseRadius + (1 - dist / mouse.radius) * 3;
+                    } else {
+                        this.radius = this.baseRadius;
+                    }
+                } else {
+                    this.radius = this.baseRadius;
+                }
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(0, 243, 255, 0.4)';
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < numParticles; i++) {
+            particles.push(new Particle());
+        }
+
+        // --- 3. ANIMATION & ROUTING ENGINE ---
+        let isJumping = false;
+        let jumpRoute = [];
+        let jumpStep = 0;
+        let jumpProgress = 0;
+
+        function easeInOutCubic(t) {
+            return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        }
+
+        function initializeSystem(btnElement) {
+            document.getElementById('boot-container').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('boot-container').style.display = 'none';
+                executeRoute();
+            }, 600);
+        }
+
+        function triggerJump() {
+            if (currentClueIndex >= clues.length - 1) return;
+            
+            document.getElementById('clue-box').classList.remove('visible');
+            
+            const oldVideo = document.querySelector('video');
+            const oldAudio = document.querySelector('audio');
+            if(oldVideo) oldVideo.pause();
+            if(oldAudio) oldAudio.pause();
+            
+            setTimeout(() => {
+                currentClueIndex++;
+                executeRoute();
+            }, 400);
+        }
+
+        function executeRoute() {
+            jumpRoute = [];
+            for(let i = 0; i < 5; i++) {
+                jumpRoute.push(particles[Math.floor(Math.random() * particles.length)]);
+            }
+            jumpStep = 0;
+            jumpProgress = 0;
+            isJumping = true;
+        }
+
+        function revealClue() {
+            const clueBox = document.getElementById('clue-box');
+            const header = document.getElementById('clue-header');
+            const textEl = document.getElementById('clue-text');
+            const mediaContainer = document.getElementById('media-container');
+            const nextBtn = document.getElementById('next-btn');
+
+            const activeClue = clues[currentClueIndex];
+
+            header.innerText = `DATA.NODE // ACCESS_0${currentClueIndex + 1}`;
+            textEl.innerText = activeClue.text;
+            
+            mediaContainer.innerHTML = '';
+            
+            let newMediaElement;
+            if (activeClue.mediaType === "image") {
+                newMediaElement = document.createElement('img');
+                newMediaElement.src = activeClue.mediaSrc;
+                newMediaElement.alt = "INTEL ATTACHMENT";
+            } else if (activeClue.mediaType === "video") {
+                newMediaElement = document.createElement('video');
+                newMediaElement.src = activeClue.mediaSrc;
+                newMediaElement.controls = true;
+            } else if (activeClue.mediaType === "audio") {
+                newMediaElement = document.createElement('audio');
+                newMediaElement.src = activeClue.mediaSrc;
+                newMediaElement.controls = true;
+            }
+
+            if(newMediaElement) {
+                mediaContainer.appendChild(newMediaElement);
+            }
+            
+            if (currentClueIndex >= clues.length - 1) {
+                nextBtn.innerText = "[ LINK DECRYPTED & APPLIED ]";
+                nextBtn.disabled = true;
+            }
+
+            clueBox.classList.add('visible');
+            scrambleText(textEl);
+        }
+
+        function scrambleText(element) {
+            const originalText = element.innerText;
+            let iterations = 0;
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*";
+            
+            const interval = setInterval(() => {
+                element.innerText = originalText.split("").map((char, index) => {
+                    if(index < iterations) return originalText[index];
+                    if(char === " ") return " ";
+                    return chars[Math.floor(Math.random() * chars.length)];
+                }).join("");
+                
+                if(iterations >= originalText.length) clearInterval(interval);
+                iterations += 2;
+            }, 20);
+        }
+
+        // --- 4. ENGINE CORE LOOP ---
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+
+                for (let j = i + 1; j < particles.length; j++) {
+                    let dx = particles[i].x - particles[j].x;
+                    let dy = particles[i].y - particles[j].y;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < maxConnectDist) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        let opacity = (1 - (dist / maxConnectDist)) * 0.15;
+                        ctx.strokeStyle = `rgba(0, 102, 255, ${opacity})`;
+                        ctx.lineWidth = 0.8;
+                        ctx.stroke();
+                    }
+                }
+
+                if (mouse.x != null && mouse.y != null) {
+                    let mDx = particles[i].x - mouse.x;
+                    let mDy = particles[i].y - mouse.y;
+                    let mDist = Math.sqrt(mDx * mDx + mDy * mDy);
+                    if (mDist < mouse.radius) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(mouse.x, mouse.y);
+                        let mOpacity = (1 - (mDist / mouse.radius)) * 0.25;
+                        ctx.strokeStyle = `rgba(0, 243, 255, ${mOpacity})`;
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            if (isJumping) {
+                jumpProgress += 0.025; 
+
+                if (jumpProgress >= 1) {
+                    jumpProgress = 0;
+                    jumpStep++;
+                    if (jumpStep >= jumpRoute.length - 1) {
+                        isJumping = false;
+                        setTimeout(revealClue, 150);
+                    }
+                }
+
+                if (isJumping) {
+                    let startNode = jumpRoute[jumpStep];
+                    let endNode = jumpRoute[jumpStep + 1];
+                    
+                    let easedProgress = easeInOutCubic(jumpProgress);
+                    let currentX = startNode.x + (endNode.x - startNode.x) * easedProgress;
+                    let currentY = startNode.y + (endNode.y - startNode.y) * easedProgress;
+
+                    ctx.beginPath();
+                    ctx.moveTo(startNode.x, startNode.y);
+                    ctx.lineTo(currentX, currentY);
+                    ctx.strokeStyle = '#00f3ff';
+                    ctx.lineWidth = 2.5;
+                    ctx.shadowBlur = 12;
+                    ctx.shadowColor = '#00f3ff';
+                    ctx.stroke();
+                    ctx.shadowBlur = 0;
+
+                    ctx.beginPath();
+                    ctx.arc(currentX, currentY, 4.5, 0, Math.PI * 2);
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fill();
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>

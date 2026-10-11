@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download Project </title>
+    <style>
+        /* --- CSS Reset & Base Styles --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Animated Gradient Background */
+            background: linear-gradient(-45deg, #0f2027, #203a43, #2c5364, #1f4037);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #ffffff;
+            padding: 40px 20px; /* Increased vertical padding for short viewports */
+        }
+
+        /* --- Keyframe Animations --- */
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* --- Glassmorphism Card Container --- */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 50px 40px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            animation: float 6s ease-in-out infinite;
+            margin: auto; /* Bulletproof technique for safe centering without top/bottom clipping */
+        }
+
+        /* --- Typography (Enhanced with fluid scaling) --- */
+        h1 {
+            font-size: clamp(1.8rem, 5vw, 2.2rem); /* Smoothly scales based on screen size */
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .subtitle {
+            font-size: clamp(1rem, 3vw, 1.1rem);
+            color: #a8b2d1;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .message-box {
+            background: rgba(0, 0, 0, 0.2);
+            border-left: 4px solid #64ffda;
+            padding: 20px;
+            border-radius: 0 12px 12px 0;
+            margin-bottom: 40px;
+            font-size: clamp(0.95rem, 2.5vw, 1rem);
+            line-height: 1.7;
+            text-align: left;
+        }
+
+        /* --- Download Button --- */
+        .btn-download {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: #64ffda;
+            color: #0a192f;
+            text-decoration: none;
+            padding: 16px 32px;
+            font-size: clamp(1rem, 2.5vw, 1.1rem);
+            font-weight: 600;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(100, 255, 218, 0.3);
+            position: relative;
+            overflow: hidden;
+            width: auto;
+            max-width: 100%;
+        }
+
+        .btn-download:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(100, 255, 218, 0.5);
+            background: #7affdf;
+        }
+
+        .btn-download:active {
+            transform: translateY(1px);
+        }
+
+        /* SVG Icon styling */
+        .btn-download svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+            flex-shrink: 0; /* Prevents icon from squishing on tight layout widths */
+            transition: transform 0.3s ease;
+        }
+
+        .btn-download:hover svg {
+            transform: translateY(2px);
+        }
+
+        /* --- Footer --- */
+        .footer-note {
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .footer-note a {
+            color: #64ffda;
+            text-decoration: none;
+        }
+
+        .footer-note a:hover {
+            text-decoration: underline;
+        }
+
+        /* --- Comprehensive Responsive Adjustments --- */
+        @media (max-width: 480px) {
+            .glass-card { 
+                padding: 35px 20px; 
+                border-radius: 20px;
+            }
+            .message-box { 
+                padding: 15px; 
+                margin-bottom: 30px;
+            }
+            .btn-download { 
+                width: 100%; 
+                padding: 14px 20px; 
+                gap: 8px;
+            }
+        }
+
+        /* Handles short heights (e.g., landscape phones) to prevent clipping */
+        @media (max-height: 620px) {
+            body { 
+                padding: 20px 10px; 
+            }
+            .glass-card { 
+                animation: none; /* Disables hover translation to eliminate clipping layout jitter */
+                padding: 30px 20px; 
+            }
+            .message-box { 
+                margin-bottom: 25px; 
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <main class="glass-card">
+        <h1 id="greeting">Welcome!</h1>
+        <p class="subtitle">You're about to download <strong>Project 101</strong></p>
+
+        <div class="message-box">
+            <p>This is a projet thst i most excited to finish. And now it's finished. If you like to save this project lick on the arrow next to the grrn colour code buttton and in the drop down menu click the "download zip" button to download full project</p>
+        </div>
+
+        <a href="https://github.com/YOUR_USERNAME/YOUR_REPO/archive/refs/heads/main.zip" class="btn-download" id="downloadBtn">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+            Download from GitHub
+        </a>
+
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Dynamic Greeting based on user's local time
+            const hour = new Date().getHours();
+            const greetingElement = document.getElementById('greeting');
+            
+            let greeting = 'Welcome!';
+            if (hour >= 5 && hour < 12) {
+                greeting = 'Good Morning!';
+            } else if (hour >= 12 && hour < 18) {
+                greeting = 'Good Afternoon!';
+            } else if (hour >= 18 || hour < 5) {
+                greeting = 'Good Evening!';
+            }
+            
+            greetingElement.innerText = greeting;
+
+            // 2. Simple Button Click Feedback (Ripple effect simulation via scaling)
+            const downloadBtn = document.getElementById('downloadBtn');
+            downloadBtn.addEventListener('click', function(e) {
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    // Check viewport height to safely restore matching CSS baseline transform
+                    if (window.innerHeight <= 620) {
+                        this.style.transform = 'none';
+                    } else {
+                        this.style.transform = 'translateY(-3px)';
+                    }
+                }, 150);
+            });
+        });
+    </script>
+</body>
+</html>
